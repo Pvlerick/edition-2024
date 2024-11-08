@@ -1,0 +1,29 @@
+trigger:
+  - main
+
+stages:
+  - template: build-template/build.yml
+
+  - template: deploy-template/deploy.yml
+    parameters:
+      dependsOn: [builds]
+      environmentName: Website-Development
+      environment: development
+      azureWebAppName: dev-global-azure-paris
+      azureWebUrl: https://dev-global-azure-paris.azurewebsites.net
+
+  - template: deploy-template/deploy.yml
+    parameters:
+      dependsOn: [development_env]
+      environmentName: Website-Staging
+      environment: staging
+      azureWebAppName: staging-global-azure-paris
+      azureWebUrl: https://staging-global-azure-paris.azurewebsites.net
+
+  - template: deploy-template/deploy.yml
+    parameters:
+      dependsOn: [staging_env]
+      environmentName: Website-Production
+      environment: production
+      azureWebAppName: production-global-azure-paris
+      azureWebUrl: https://production-global-azure-paris.azurewebsites.net
